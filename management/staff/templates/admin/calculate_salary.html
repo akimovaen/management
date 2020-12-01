@@ -1,0 +1,48 @@
+{% extends "admin/base_site.html" %}
+{% load i18n l10n admin_urls static %}
+
+{% block extrahead %}
+    {{ block.super }}
+    {{ media }}
+    <script type="text/javascript" src="{% static 'admin/js/cancel.js' %}"></script>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} calculate-salary{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+&rsaquo; {% trans 'Calculate salary' %}
+</div>
+{% endblock %}
+
+{% block content %}
+    <p>{% blocktrans %}Сhoose a month to calculate wages for employees:{% endblocktrans %}</p>
+    <form method="post">{% csrf_token %}
+    <div>
+        <div>
+            {% for obj in queryset %}
+            <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk|unlocalize }}">
+            {% endfor %}
+        </div>
+        <input type="hidden" name="action" value="calculate_salary">
+        <input list="months" name='month'>
+        <datalist id="months">
+        {% for month in months %}
+            <option value={{month}}>
+        {% endfor %}
+        </datalist>
+        <label for="year">{% trans "Year:" %}</label>
+        <input type="number" id="year" name="year" min="2020" value={{year}}>
+        <p>{% trans "Сhoose for which half of the month the salary is calculated:" %}</p>
+        <input type="radio" id="half1" name="half_month" value="half1">
+        <label for="half1">The first half of the month</label><br>
+        <input type="radio" id="half2" name="half_month" value="half2">
+        <label for="half2">The second half of the month</label><br>
+        <input type="submit" value="{% trans 'Ok' %}">
+    </div>
+    <a href="#" class="button cancel-link">{% trans "No, take me back" %}</a>
+    </form>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "finance/base.html" %}
+
+{% block title %}
+    {{ shop.name }}
+{% endblock %}
+
+{% block main %}
+<h3>Are you sure you want to delete the selected item?{{ form.id }}</h3>
+<form method="post" id='bank_delete' class="form-horizontal col-sm-10">
+    {% csrf_token %}
+    {{ form }}
+    <div class="form-group"> 
+        <div class="col-sm-offset-5 col-sm-5">
+            <input type="submit" value="Delete" class="btn btn-primary">
+        </div>
+    </div>
+    <div class="form-group"> 
+        <div class="col-sm-offset-5 col-sm-5">
+            <a href="{{success}}" class="btn btn-danger">No, take me back</a>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

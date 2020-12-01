@@ -1,0 +1,60 @@
+{% extends "finance/base.html" %}
+{% load static %}
+
+
+{% block staticfiles %}
+<script type="text/javascript" src="{% static 'staff/js/shop_month.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+    {{ shop.name }}
+{% endblock %}
+
+{% block main %}
+<div>
+    <h2>{{ shop.name }}</h2>
+
+    <div class="pagination">
+        <a href="/staff/{{ shop.id }}/{{ month_delta|add:1 }}/">Previous month</a>
+        
+        <span>{{ month_name }}</span>
+        
+        {% if month_delta > 0 %}
+            <a href="/staff/{{ shop.id }}/{{ month_delta|add:-1 }}/">Next month</a>
+        {% endif %}
+    </div>
+    <table class='col-sm-12 table-hover table-bordered'>
+        <colgroup>
+            <col>
+            <col class="month_totals">
+            {% for date in weekdays %}
+                {% if date.weekday == "Sa" or date.weekday == "Su" %}
+                    <col class="weekend">
+                {% else %}
+                    <col>{% endif %}
+            {% endfor %}
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Staff</th>
+                <th>Totals</th>
+                {% for date in weekdays %}
+                    <th class="days"><a href="../timesheet/{{month.year}}/{{month.month}}/{{date.day}}/">{{ date.day }}</a><br><span>{{ date.weekday }}</span></th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for person in data %}
+            <tr class="name">
+                <td>{{ person.name }}</td>
+                <td class="results"></td>
+                {% for day in person.days.values %}
+                <td class="amount">{{ day|floatformat:1|default:"0" }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

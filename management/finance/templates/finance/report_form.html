@@ -1,0 +1,98 @@
+{% extends "finance/base.html" %}
+{% load static %}
+
+{% block staticfiles %}
+<script type="text/javascript" src="{% static 'finance/js/report.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+    Report
+{% endblock %}
+
+{% block main %}
+    <div class='day' name='day' type="date">Date: {{ day|date:"d.m.Y" }}</div>
+    <h2>{{ shop.name }}: cash flow report</h2>
+    <div hidden id="shop_id">{{ shop.id }}</div>
+    <div hidden id="balance">{{ balance }}</div>
+    <div hidden id="revenue">{{ revenue }}</div>
+    <div hidden id="bank">{{ bank }}</div>
+    <div class="row">
+        <div class="col-sm-3">
+        {% if create %}
+            <button id="add-data" type="button" class="btn btn-primary">Add data</button>
+            <div id="enter-data">
+                <div class="form-group">
+                    <label for="cost_type" class="control-label col-sm-4">Cost type: </label>
+                    <select id="cost_type" class="col-sm-8">
+                        <option></option>
+                        {% for type in cost %}
+                            <option value="{{ type.id }}">{{ type.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <form method="post" filter-cost-type-url="{% url 'finance:report-view' shop.id day.year day.month day.day %}" id='report_form' class="form-horizontal">
+                    {% csrf_token %}
+                    <input id='csrf_token' value='{{ csrf_token }}' hidden>
+                    <div class="item">
+                        {% for field in form %}
+                            {% if field.label == "Shop" or field.label == "Day" %}<div class="hidden-field">{{ field.label_tag }} {{ field }}</div>
+                            {% else %}<div class="form-group">
+                                <div class="control-label col-sm-4">{{ field.label_tag }}</div>
+                                <div class="col-sm-8">{{ field }}</div>
+                            </div>{% endif %}
+                        {% endfor %}
+                    </div>
+                    <input type="submit" value="Ready" class="btn btn-primary">
+                </form>
+            </div>
+            <form method="post" action="{% url 'finance:report-complete' shop.id day.year day.month day.day %}" id="completed-report">
+                {% csrf_token %}
+                <input class="hidden-field" id='send-closing-balance' name='closing-balance'>
+                <input type="submit" value="Report is completed." class="btn btn-primary">
+            </form>
+        {% endif %}        
+        </div>
+        {% if data %}
+            <table class='col-sm-9 table-hover table-bordered report'>
+                {% for item in data %}
+                <tr class="item-{{ item.cost.id }}">
+                    {% if item.cost.id <= bank %}
+                        <td>{{ item.cost.name }}</td>
+                        <td class="amount bold"> {{ item.amount }}</td>
+                        <td></td>
+                    {% else %}
+                        <td>{{ item.cost.name }} :
+                        {% if item.counterparty %}<span class="bold"> {{ item.counterparty }}</span>{% endif %}
+                        {% if item.comment %}<span> {{ item.comment }}</span>{% endif %}
+                        </td>
+                        {% if item.cost.income %}
+                        <td class="income amount">{{ item.amount }}</td>
+                        <td></td>
+                        {% else %}
+                        <td></td>
+                        <td class="expense amount">{{ item.amount }}</td>{% endif %}{% endif %}
+                    <td><a href="/finance/report/edit/{{ item.id }}/" class="edit" data-toggle="tooltip" title="Edit"><i class="fa fa-edit"></i></a></td>
+                    <td><a href="/finance/report/delete/{{ item.id }}/" class="delete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></a></td>
+                </tr>
+                {% if item.cost.id == bank %}
+                    <tr>
+                        <td class="bold">Cash revenue</td>
+                        <td class="income amount bold" id="cash-revenue"></td>
+                        <td></td>
+                    </tr>{% endif %}
+                {% endfor %}
+                <tr>
+                    <td>Total:</td>
+                    <td id="total-income" class=bold></td>
+                    <td id="total-expense" class=bold></td>
+                </tr>
+                <tr>
+                    <td>Сlosing day balance:</td>
+                    <td id="closing-balance" class="bold"></td>
+                    <td></td>
+                </tr>
+            </table>
+        {% endif %}    
+    </div>   
+
+{% endblock %}

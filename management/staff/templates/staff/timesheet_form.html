@@ -1,0 +1,54 @@
+{% extends "finance/base.html" %}
+{% load static %}
+
+{% block staticfiles %}
+<script type="text/javascript" src="{% static 'staff/js/timesheet.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+    Timesheet
+{% endblock %}
+
+{% block main %}
+<div class='day' name='day' type="date">Date: {{ day|date:"d.m.Y" }}</div>
+<h2>{{ shop.name }}: timesheet</h2>
+<div hidden id="shop_id">{{ shop.id }}</div>
+<div class="row">
+    <div class="col-sm-3">
+        <button id="add-data" type="button" class="btn btn-primary">Add data</button> 
+        <div id="enter-data">
+            <form method="post" id='report_form' class="form-horizontal">
+                {% csrf_token %}
+                <div class="item">
+                    {% for field in form %}
+                        {% if field.label == "Shop" or field.label == "Day" %}<div class="hidden-field">{{ field.label_tag }} {{ field }}</div>
+                        {% else %}<div class="form-group">
+                            <div class="control-label col-sm-4">{{ field.label_tag }}</div>
+                            <div class="col-sm-8">{{ field }}</div>                       
+                        </div>{% endif %}
+                    {% endfor %}
+                </div>
+                <input type="submit" value="Ready" class="btn btn-primary">
+            </form>
+        </div>
+        <div id="completed-report">
+            {% if user.is_superuser %}
+                <a href="/staff/{{shop.id}}/0/" class="btn btn-primary">Timesheet is completed.</a>
+            {% else %}
+                <a href="/finance/greeting/" class="btn btn-primary">Timesheet is completed.</a>
+            {% endif %}
+        </div>
+
+    </div>
+    {% if data %}
+    <table class='col-sm-6 table-hover table-bordered'>
+        {% for item in data %}
+        <tr>
+            <td>{{ item.name.name }}</td>
+            <td>{{ item.hours }}</td>
+            <td><a href="/staff/timesheet/edit/{{item.id}}/" class="edit" data-toggle="tooltip" title="Edit"><i class="fa fa-edit"></i></a></td>
+            <td><a href="/staff/timesheet/delete/{{item.id}}/" class="delete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></a></td>
+        </tr>{% endfor %}
+    </table>{% endif %}
+</div>
+{% endblock %}

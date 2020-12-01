@@ -1,0 +1,27 @@
+{% extends "finance/base.html" %}
+
+{% block title %}
+    Bank
+{% endblock %}
+
+{% block main %}
+<h3>Select a field or fields, make changes and click Edit.</h3>
+<h3>To go back, press Edit without making any changes.</h3>
+<form method="post" id='bank_edit' class="form-horizontal col-sm-10">
+    {% csrf_token %}
+    <div class="item">
+        {% for field in form %}
+        <div class="form-group">
+            <div class="control-label col-sm-3">{{ field.label_tag }}</div>
+            <div class="col-sm-7">{{ field }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="form-group"> 
+        <div class="col-sm-offset-3 col-sm-9">
+        <input type="submit" value="Edit" class="btn btn-primary">
+        </div>
+    </div>
+</form>
+
+{% endblock %}

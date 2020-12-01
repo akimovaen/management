@@ -1,0 +1,112 @@
+{% extends "finance/base.html" %}
+{% load static %}
+
+
+{% block staticfiles %}
+<script type="text/javascript" src="{% static 'finance/js/shop_list.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+    Shops
+{% endblock %}
+
+{% block main %}
+<div class="pagination">
+    <a href="../{{ month_delta|add:1 }}/">Previous month</a>
+    
+    <span>{{ month }}</span>
+    
+    {% if month_delta > 0 %}
+        <a href="../{{ month_delta|add:-1 }}/">Next month</a>
+    {% endif %}
+</div>
+<table class='col-sm-12 table-hover table-bordered shop-list'>
+    <colgroup>
+        <col span="2">
+        <col span="2" class="month_totals">
+        {% for trademark in trademark_list %}
+            <col span="{{trademark.shops|add:trademark.shops}}" class="{{trademark.name}}">
+        {% endfor %}
+    </colgroup>
+    <thead>
+        <tr>
+            <th colspan="2" rowspan="2">Incomes and expenses</th>
+            <th rowspan="2" colspan="2">Totals</th>
+            {% for trademark in trademark_list %}
+            <th colspan="{{trademark.shops|add:trademark.shops}}">{{ trademark.name }}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for trademark in trademark_list %}
+            {% for shop in shops %}
+            {% if shop.trademark == trademark %}
+                <th colspan="2" class="shop"><a href="../../{{shop.id}}/{{month_delta}}/">{{ shop.name }}</a></th>
+            {% endif %}{% endfor %}{% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="revenue" class="bold">
+            <th colspan="2">Revenue</th>
+            <td class="results"></td>
+            <td class="results-percent"></td>
+            {% for trademark in trademark_list %}
+            {% for shop in revenue %}
+            {% if shop.trademark == trademark %}
+                <td class="shop-{{shop.id}} amount">{{ shop.cash|floatformat:2|default:"0" }}</td>
+                <td>100%</td>
+            {% endif %}{% endfor %}{% endfor %}
+        </tr>
+        {% for cost_type in cost_types %}
+            <tr class="type_totals costs">
+                <td class="display_list">+</td>
+                <th class="type" name="{{cost_type.id}}">{{ cost_type.name }}</th>
+                <td class="results"></td>
+                <td class="results-percent"></td>
+                {% for trademark in trademark_list %}
+                {% for shop in shops %}
+                {% if shop.trademark == trademark %}
+                    <td class="shop-{{shop.id}} amount"></td>
+                    <td class="shop-{{shop.id}}-percent"></td>
+                {% endif %}{% endfor %}{% endfor %}
+            </tr>
+            {% for cost in cost_type.costs %}
+            {% if cost.income %}<tr class="income type-{{cost_type.id}} costs">
+            {% else %}<tr class="expense type-{{cost_type.id}} costs">{% endif %}
+                <td colspan="2" class="cost_name">{{ cost.name }}</td>
+                <td class="results"></td>
+                <td class="results-percent"></td>
+                {% for trademark in trademark_list %}
+                {% for shop in cost.shops %}
+                {% if shop.trademark == trademark %}
+                    <td class="shop-{{shop.id}} amount">{{ shop.total|floatformat:2|default:"0" }}</td>
+                    <td class="shop-{{shop.id}}-percent"></td>
+                {% endif %}{% endfor %}{% endfor %}
+            </tr>
+            {% endfor %}
+        {% endfor %}
+        <tr id="total_expenses" class="bold">
+            <th colspan="2">Total expenses</th>
+            <td class="results"></td>
+            <td class="results-percent"></td>
+            {% for trademark in trademark_list %}
+            {% for shop in shops %}
+            {% if shop.trademark == trademark %}
+                <td class="shop-{{shop.id}} amount"></td>
+                <td class="shop-{{shop.id}}-percent"></td>
+            {% endif %}{% endfor %}{% endfor %}
+        </tr>
+        <tr id="profit" class="bold">
+            <th colspan="2">Profit</th>
+            <td class="results"></td>
+            <td class="results-percent"></td>
+            {% for trademark in trademark_list %}
+            {% for shop in shops %}
+            {% if shop.trademark == trademark %}
+                <td class="shop-{{shop.id}} amount"></td>
+                <td class="shop-{{shop.id}}-percent"></td>
+            {% endif %}{% endfor %}{% endfor %}
+        </tr>
+    </tbody>
+</table>
+
+{% endblock %}

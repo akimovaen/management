@@ -1,0 +1,13 @@
+venv
+management/management/__pycache__
+management/finance/__pycache__
+management/finance/migrations/__pycache__
+management/staff/__pycache__
+management/staff/migrations/__pycache__
+db.sqlite3
+.vscode
+.coverage
+geckodriver.log
+management/management/local.py
+Dockerfile
+docker-compose.yml

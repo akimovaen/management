@@ -1,0 +1,87 @@
+{% extends "finance/base.html" %}
+{% load static %}
+
+
+{% block staticfiles %}
+<script type="text/javascript" src="{% static 'finance/js/shop_month.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+    {{ shop.name }}
+{% endblock %}
+
+{% block main %}
+<div>
+    <h2>{{ shop.name }}</h2>
+
+    <div class="pagination">
+        <a href="../../{{ shop.id }}/{{ month_delta|add:1 }}/">Previous month</a>
+        
+        <span>{{ month_name }}</span>
+        
+        {% if month_delta > 0 %}
+            <a href="../../{{ shop.id }}/{{ month_delta|add:-1 }}/">Next month</a>
+        {% endif %}
+    </div>
+    <div id="weekdays" hidden>{{ weekdays }}</div>
+    <div id="balance" hidden>{{ balance }}</div>
+    <div class="month-data">
+    <table class='col-sm-12 table-hover table-bordered shop-month'>
+        <colgroup>
+            <col span="2">
+            <col class="month_totals">
+            {% for date in weekdays %}
+                {% if date.weekday == "Sa" or date.weekday == "Su" %}
+                    <col class="weekend">
+                {% else %}
+                    <col>{% endif %}
+            {% endfor %}
+        </colgroup>
+        <thead>
+            <tr>
+                <th colspan="2">Incomes and expenses</th>
+                <th>Totals</th>
+                {% for date in weekdays %}
+                    <th class="days"><a href="../report/{{month.year}}/{{month.month}}/{{date.day}}/">{{ date.day }}</a><br><span>{{ date.weekday }}</span></th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for cost_type in data %}
+                <tr class="type_totals">
+                    <td class="display_list">+</td>
+                    <th class="type" name="{{cost_type.id}}">{{ cost_type.name }}</th>
+                    <td class="results"></td>
+                    {% for date in weekdays %}
+                        <td class="day-{{date.day}} amount"></td>
+                    {% endfor %}
+                </tr>                
+                {% for cost in cost_type.costs %}
+                    {% if cost.income %}
+                        <tr class="income type-{{cost_type.id}}">
+                    {% else %}
+                        <tr class="expense type-{{cost_type.id}}">{% endif %}
+                    <td colspan="2" class="cost_name">{{ cost.name }}</td>
+                    <td class="results"></td>
+                    {% for k_day, v_day in cost.days.items %}
+                        <td class="day-{{k_day}} amount">{{ v_day|floatformat:2|default:"0" }}</td>
+                    {% endfor %}
+                    </tr>
+                {% endfor %}             
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr class="closing_balance">
+                <th colspan="2">Сlosing day balance</th>
+                <td class="results"></td>
+                {% for date in weekdays %}
+                    <td class="day-{{ date.day }}"></td>
+                {% endfor %}
+            </tr>
+        </tfoot>
+    </table>
+    </div>
+    <div id="test"></div>
+</div>
+
+{% endblock %}

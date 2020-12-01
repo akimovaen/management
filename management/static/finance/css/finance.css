@@ -1,0 +1,302 @@
+.container-fluid {
+  padding: 15px;
+  margin: 15px;
+  font-size: medium;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-align: center;
+  width: 85%;
+}
+
+.topnav {
+  overflow: visible;
+  zoom:1.0;
+}
+
+.topnav:after {
+  content: " ";
+  display: block;
+  clear: both;
+  height: 0;
+  visibility: hidden;
+}
+
+.navbar {
+  background-color: lightskyblue;
+  z-index: 2;
+}
+
+.navbar a {
+  float: left;
+  font-size: 1.4vw;
+  color: black;
+  text-align: center;
+  padding: 0.9vw 6vw;
+  text-decoration: none;
+}
+  
+.dropdown {
+  float: left;
+}
+  
+.dropdown .dropbtn {
+  font-size: 1.4vw;
+  border: none;
+  outline: none;
+  color: black;
+  padding: 0.9vw 6vw;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.dropright .dropbtn {
+  padding: 0.8vw 2vw;
+  min-width: 100%;
+  text-align: left;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: #4fbafc;
+}
+  
+.dropdown-content, .dropright-content {
+  display: none;
+  position: absolute;
+  background-color: #4fbafc;
+  min-width: 100%;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropright-content {
+  top: inherit;
+  left: 100%;
+  min-width: 80px;
+  background-color: lightskyblue;
+}
+  
+.dropdown-content a, .dropright-content a {
+  float: none;
+  color: black;
+  padding: 0.8vw 2vw;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+  
+.dropdown-content a:hover, .dropright:hover .dropbtn {
+  background-color: #099ffc;
+}
+  
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropright:hover .dropright-content {
+  display: inline-block;
+}
+
+.navbar-right {
+  float: right;
+}
+
+.navbar-right div {
+  font-size: 1vw;
+}
+
+input[type=text], input[type=password], input[type=number], select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+input[type=date] {
+  width: 25%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+  
+.greeting img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+}
+
+.image img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+  
+.hidden-field {
+    opacity: 0;
+}
+
+#enter-data {
+  display: none;
+  overflow-x: hidden;
+  padding: 0.5vw;
+  border: #4fbafc solid 2px;
+}
+
+div.row {
+  overflow: initial;
+}
+
+div.col-sm-3 {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+#add-data {
+  display: block;
+}
+
+table th, table td {
+  padding-left: 3px;
+}
+
+thead th {
+  text-align: center;
+}
+
+table tbody tr.income, tr.expense {
+    display: none;
+}
+
+table colgroup col.weekend {
+  background-color: #c4e6fc;
+}
+
+table colgroup col.first, table colgroup col.SS {
+  background-color: #eaf0f3;
+}
+
+table colgroup col.second, table colgroup col.SW {
+  background-color: #dfeffa;
+}
+  
+table colgroup col.month_totals {
+  background-color: #d8e7fa;
+}
+
+table .amount, .shop-list td, .report #total-income, .report #total-expense, .report #closing-balance {
+  text-align: right;
+  padding: 5px;
+}
+
+.report span {
+  font-style: italic;
+}
+
+#completed-report {
+  position: fixed;
+  bottom: 0px;
+  padding: 5px;
+  right: 40%;
+  left: 40%;
+  width: 20%;
+  z-index: 9999;
+}
+
+.day {
+  padding: 5px;
+  float: right;
+  border: 3px solid black;
+  width: 150px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.fa-edit {
+  color: green;
+  text-decoration: underline;
+  margin-left: 3px;
+}
+
+.fa-edit:hover {
+  color: darkorange;
+}
+
+.fa-trash-o {
+  color: crimson;
+  text-decoration: underline;
+  margin-left: 3px;
+}
+
+.fa-trash-o:hover {
+  color: darkred;
+}
+
+.fa-edit::before, .fa-trash-o::before {
+  margin-right: 3px;
+  margin-left: 3px;
+}
+
+#cost_type {
+ margin-bottom: 15px;
+}
+
+#report_delete {
+  margin-top: 30px;
+}
+
+.pagination {
+  color: black;
+  float: none;
+  padding: 12px 12px;
+  text-decoration: none;
+  transition: background-color .3s;
+  width: 100%;
+}
+
+.pagination span{
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;  
+  font-size: 18pt;
+  padding: 12px 20%;
+  text-decoration: underline;
+}
+
+.pagination a {
+  background-color: #4fbafc;
+  border: 1px solid #099ffc;
+  color: white;
+  padding: 12px 5%;
+}
+
+.shop-month td, .no-accounts td {
+  font-size: smaller;
+  text-align: right;
+}
+
+.shop-month .days {
+  text-align: center;
+}
+
+.month-data {
+  overflow-x: auto;
+}
+
+.display_list {
+  cursor: pointer;
+  color: blue;
+  font-weight: bold;
+}
+
+.account {
+  margin: 1.5vw;
+}
+
+.account td.comment {
+  font-size: smaller;
+  font-style: italic;
+}

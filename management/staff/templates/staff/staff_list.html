@@ -1,0 +1,66 @@
+{% extends "finance/base.html" %}
+{% load static %}
+
+
+{% block staticfiles %}
+<script type="text/javascript" src="{% static 'staff/js/staff_list.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+    Staff
+{% endblock %}
+
+{% block main %}
+<div class="pagination">
+    <a href="../{{ month_delta|add:1 }}/">Previous month</a>
+    
+    <span>{{ month_name }}</span>
+    
+    {% if month_delta > 0 %}
+        <a href="../{{ month_delta|add:-1 }}/">Next month</a>
+    {% endif %}
+</div>
+<table class='col-sm-12 table-hover table-bordered'>
+    <colgroup>
+        <col>
+        <col span="5" class="first">
+        <col span="5" class="second">
+    </colgroup>
+    <thead>
+        <tr>
+            <th rowspan="2">Employee</th>
+            <th colspan="5">The first half of month</th>
+            <th colspan="5">The second half of month</th>
+        </tr>
+        <tr>
+            <th>Previous month salary balance</th>
+            <th>Prepayment</th>
+            <th>Bonus</th>
+            <th>Accrued salary</th>
+            <th>Due for payment for the first half of the month</th>
+            <th>Paid salary for the first half of the month</th>
+            <th>Prepayment</th>
+            <th>Bonus</th>
+            <th>Accrued salary</th>
+            <th>Due for payment for the second half of the month</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for person in staff %}
+        <tr class="name">
+            <td>{{ person.name }}</td>
+            <td class="prev_salary amount">{{ person.totals.prev_salary|floatformat:2|default:"0" }}</td>
+            <td class="first_prepayment amount">{{ person.totals.first_prepayment|floatformat:2|default:"0" }}</td>
+            <td class="amount">{{ person.totals.first_bonus|floatformat:2|default:"0" }}</td>
+            <td class="first_salary amount">{{ person.totals.first_accrued_salary|floatformat:2|default:"0" }}</td>
+            <td class="first_payment_due amount"></td>
+            <td class="paid_salary amount">{{ person.totals.first_paid_salary|floatformat:2|default:"0" }}</td>
+            <td class="second_prepayment amount">{{ person.totals.second_prepayment|floatformat:2|default:"0" }}</td>
+            <td class="amount">{{ person.totals.second_bonus|floatformat:2|default:"0" }}</td>
+            <td class="second_salary amount">{{ person.totals.second_accrued_salary|floatformat:2|default:"0" }}</td>
+            <td class="second_payment_due amount"></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "finance/base.html" %}
+{% load static %}
+
+
+{% block staticfiles %}
+{% endblock %}
+
+{% block title %}
+    {{ shop.name }}
+{% endblock %}
+
+{% block main %}
+<div class='greeting'>
+    <img src="{% static 'images/greeting.jpg' %}" alt="Greeting">
+</div>
+{% endblock %}

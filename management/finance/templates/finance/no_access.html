@@ -1,0 +1,19 @@
+{% extends "finance/base.html" %}
+{% load static %}
+
+
+{% block staticfiles %}
+{% endblock %}
+
+{% block title %}
+    No access
+{% endblock %}
+
+{% block main %}
+<div class='image'>
+    <img src="{% static 'images/no_access.jpg' %}" alt="No access">
+</div>
+<div class="alert alert-danger" role="alert">
+    <h1>You have no access to this page!</h1>
+</div>
+{% endblock %}

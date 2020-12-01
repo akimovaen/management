@@ -1,0 +1,98 @@
+{% extends "finance/base.html" %}
+{% load static %}
+
+{% block staticfiles %}
+<script type="text/javascript" src="{% static 'finance/js/bank.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+    Bank
+{% endblock %}
+
+{% block main %}
+<div class="pagination">
+    <a href="/finance/bank/{{day.year}}/{{day.month}}/{{day.day|add:-1 }}/">Previous day</a>
+    
+    <span id='day' name='day' type="date">{{ day|date:"d.m.Y" }}</span>
+    
+    <a href="/finance/bank/{{day.year}}/{{day.month}}/{{day.day|add:1 }}/">Next day</a>
+</div>
+<div class="row">
+    <div class="col-sm-3">
+        {% if no_accounts %}
+        <table class='col-sm-12 table-hover table-bordered no-accounts'>
+            {% for item in no_accounts %}
+                <tr>
+                    <td>{{ item.amount }}</td>
+                    <td>{{ item.shop.name }}</td>
+                    <td>{{ item.cost.name }}</td>
+                    <td>{{ item.comment|default:"" }}</td>
+                    <td><a href="/finance/bank/edit/{{ item.id }}/" class="edit" data-toggle="tooltip" title="Edit"><i class="fa fa-edit"></i></a></td>
+                    <td><a href="/finance/bank/delete/{{ item.id }}/" class="delete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></a></td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+        <button id="add-data" type="button" class="btn btn-primary">Add data</button>
+        <div id="enter-data">
+            <div class="form-group">
+                <label for="cost_type" class="control-label col-sm-4">Cost type: </label>
+                <select id="cost_type" class="col-sm-8">
+                    <option></option>
+                    {% for type in cost %}
+                        <option value="{{ type.id }}">{{ type.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>    
+            <form method="post" filter-cost-type-url="{% url 'finance:bank-view' day.year day.month day.day %}" id='bank_form' class="form-horizontal">
+                {% csrf_token %}
+                <input id='csrf_token' value='{{ csrf_token }}' hidden>
+                <div class="item">
+                    {% for field in form %}
+                    {% if field.label == "Day" %}<div class="hidden-field">{{ field.label_tag }} {{ field }}</div>
+                    {% else %}<div class="form-group">
+                        <div class="control-label col-sm-4">{{ field.label_tag }}</div>
+                        <div class="col-sm-8">{{ field }}</div>
+                    </div>{% endif %}
+                    {% endfor %}
+                </div>
+                <input type="submit" value="Ready" class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+    <div class="col-sm-9">
+    
+    {% for account in data %}
+        {% if account.transactions %}
+        <table class="account col-sm-5 table-hover table-bordered" name="{{account.name.id}}">
+            <caption class="bold">{{ account.name.name }}</caption>
+            {% for transaction in account.transactions %}
+            <tr class="item-{{transaction.cost.id}}">
+            {% if transaction.cost.income %}
+                <td class="income amount">{{ transaction.amount }}</td>
+                <td></td>
+            {% else %}
+                <td></td>
+                <td class="outcome amount">{{ transaction.amount }}</td>{% endif %}
+                <td>{{ transaction.shop.name|default:"" }}</td>
+                <td>{{ transaction.cost.name }}</td>
+                <td class='comment'>{{ transaction.comment|default:"" }}</td>
+                <td><a href="/finance/bank/edit/{{transaction.id}}/" class="edit" data-toggle="tooltip" title="Edit"><i class="fa fa-edit"></i></a></td>
+                <td><a href="/finance/bank/delete/{{transaction.id}}/" class="delete" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></a></td>
+            </tr>{% endfor %}
+            <tr class="bold">
+                <td class="total_income amount"></td>
+                <td class="total_outcome amount"></td>
+                <td colspan="5"></td>
+            </tr>
+            <tr class="bold">
+                <td class="closing_balance amount"></td>
+                <td></td>
+                <td colspan="5">Closing day balance</td>
+            </tr>
+        </table>{% endif %}
+    {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

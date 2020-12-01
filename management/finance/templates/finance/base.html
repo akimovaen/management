@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' type='text/css'>
+        <link rel="stylesheet" href="{% static 'finance/css/finance.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        {% block staticfiles %}{% endblock %}
+
+        <title>{% block title %}{% endblock %}</title>
+    
+    </head>
+    <body>
+        <div class="topnav">
+            <div class="navbar">
+            {% if user.is_superuser %}
+                <a href="/admin">Admin</a>
+                <div class="dropdown">
+                    <button class="dropbtn">Finance <i class="fa fa-caret-down"></i></button>
+                    <div class="dropdown-content">
+                        {% if month_delta %}<a href="/finance/shops/{{month_delta}}/">Shops</a>
+                        {% else %}<a href="/finance/shops/0/">All shops</a>{% endif %}
+                        <a href="/finance/bank/select/">Bank</a>
+                        <div class="dropright">
+                            <button class="dropbtn">Shop month reports <i class="fa fa-caret-right"></i></button>
+                            <div class="dropright-content">
+                                {% for shop in shops %}
+                                    {% if month_delta %}<a href="/finance/{{shop.id}}/{{month_delta}}/">{{ shop.name }}</a>
+                                    {% else %}<a href="/finance/{{shop.id}}/0/">{{ shop.name }}</a>{% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="dropright">
+                            <button class="dropbtn">Shop daily reports <i class="fa fa-caret-right"></i></button>
+                            <div class="dropright-content">
+                                {% for shop in shops %}
+                                    <a href="/finance/{{shop.id}}/report/select/">{{ shop.name }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="dropbtn">Staff <i class="fa fa-caret-down"></i></button>
+                    <div class="dropdown-content">
+                      {% if month_delta %}<a href="/staff/index/{{month_delta}}/">Salary for a month</a>
+                      {% else %}<a href="/staff/index/0/">Staff for a month</a>{% endif %}
+                      <div class="dropright">
+                        <button class="dropbtn">Shop month timesheets <i class="fa fa-caret-right"></i></button>
+                        <div class="dropright-content">
+                          {% for shop in shops %}
+                            {% if month_delta %}<a href="/staff/{{shop.id}}/{{month_delta}}/">{{ shop.name }}</a>
+                            {% else %}<a href="/staff/{{shop.id}}/0/">{{ shop.name }}</a>{% endif %}
+                          {% endfor %}
+                        </div>
+                      </div>
+                      <div class="dropright">
+                        <button class="dropbtn">Timesheet <i class="fa fa-caret-right"></i></button>
+                        <div class="dropright-content">
+                          {% for shop in shops %}
+                            <a href="/staff/{{shop.id}}/timesheet/select/">{{ shop.name }}</a>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            {% else %}
+                {% if shop %}
+                <a href="/finance/{{shop.id}}/report/select/">Report</a>
+                <a href="/staff/{{shop.id}}/timesheet/select/">Timesheet</a>{% endif %}
+            {% endif %}
+                  <div class="navbar-right">
+                  {% if user.is_authenticated %}
+                      <div>{{ user.get_username }}
+                      <a href="{% url 'logout'%}?next={{request.path}}">Logout</a></div>
+                  {% else %}
+                      <a href="{% url 'login'%}?next={{request.path}}">Login</a>
+                  {% endif %}
+                  </div>
+            </div>
+        </div>
+        <main>
+            <div class="content container-fluid">
+                {% block main %}{% endblock %}
+            </div>
+        </main>
+    </body>
+</html>

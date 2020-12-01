@@ -1,0 +1,21 @@
+{% extends "finance/base.html" %}
+
+{% block staticfiles %}{% endblock %}
+
+{% block title %}{% endblock %}
+
+{% block main %}
+<form action="{% url 'finance:select-bank' %}" method="post" class="form-horizontal">{% csrf_token %}
+    <div class="form-group">
+    {% if data.message %}<div class="col-sm-offset-3 col-sm-9">{{ data.message }}</div>
+    {% else %}<div class="col-sm-offset-3 col-sm-9">The date of the last bank transaction: {{ data.date }}</div>{% endif %}
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-3" for="day">Select the date of bank transactions: </label>
+        <div class="col-sm-9"><input id='day' name='day' type="date"></div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-9"><input id='select-date-button' type="submit" value="Select" class="btn btn-primary"></div>
+    </div>
+</form>
+{% endblock %}
